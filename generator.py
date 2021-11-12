@@ -427,9 +427,9 @@ def do_simulation(cx, cy, cyaw, ck, sp, dl, initial_state):
         for i in xref:
             npState = np.concatenate((npState,i))
         npState = np.concatenate((npState,x0))
-        npOutput = [ai, di]
+        npOutput = [ai, 4*di/math.pi] # We normalise the output : a in [-1;1] and delta from [-pi/4;pi/4] tot [-1;1]
 
-        arrayState.append([npState, npOutput, cx[target_ind], cy[target_ind], cyaw[target_ind], ck[target_ind], sp[target_ind]])
+        arrayState.append([npState, npOutput])
                     
         #for i in range(100):
         #  state = update_state(state, ai, di, 0.001, False)
@@ -603,6 +603,7 @@ def get_switch_back_course(dl):
 
 ourCurve = False
 horizon = 200
+data = []
 arrayState = []
 
 def main():
@@ -624,6 +625,8 @@ def main():
 
 
     sp = calc_speed_profile(cx, cy, cyaw, TARGET_SPEED)
+    global data
+    data = [cx, cy, cyaw, sp]
 
     initial_state = State(x=cx[0], y=cy[0], yaw=cyaw[0], v=0.0)
 
@@ -656,7 +659,12 @@ if __name__ == '__main__':
         print(i)
         cx, cy, t, x, y, yaw, v, d, a = main()
 
+        if i == 0:
+            np.save(f'../neural_network/data/trainingRef.npy', arrayState)
+            np.save(f'../neural_network/data/trainingRef_data.npy', data)
+
         # print(arrayState[0])
 
         # plot(cx, cy, t, x, y, yaw, v, d, a)
-    np.save(f'../neural_network/data/trainning1000.npy', arrayState)
+    np.save(f'../neural_network/data/training1000.npy', arrayState)
+    # np.save(f'../neural_network/data/sample2_data.npy', data)
