@@ -37,8 +37,8 @@ if __name__ == '__main__':
         t, x, y, yaw, v, d, a = generator.do_simulation(cx, cy, cyaw, [], sp, 1.0, initial_state)
 
         results.append('MPC')
-        results.append(str(DNN.validate(cx, cy, x, y)))
         results.append(str(time.time()-startTime))
+        results.append(str(DNN.validate(cx, cy, x, y)))
 
         cyaw = md.smooth_yaw(cyaw)
 
@@ -50,8 +50,8 @@ if __name__ == '__main__':
             initial_state = md.State(x=cx[0], y=cy[0], yaw=cyaw[0], v=0.0)
             x, y = DNN.predictWithoutValidate(model, cx, cy, cyaw, sp, initial_state, md.DT)
             results.append(nn)
-            results.append(str(DNN.validate(cx, cy, x, y)))
             results.append(str(time.time()-startTime))
+            results.append(str(DNN.validate(cx, cy, x, y)))
 
         for nn in lstm:
             tf.compat.v1.reset_default_graph()
@@ -61,8 +61,8 @@ if __name__ == '__main__':
             initial_state = md.State(x=cx[0], y=cy[0], yaw=cyaw[0], v=0.0)
             x, y = DNN.predictWithoutValidate(model, cx, cy, cyaw, sp, initial_state, md.DT)
             results.append(nn)
-            results.append(str(DNN.validate(cx, cy, x, y)))
             results.append(str(time.time()-startTime))
+            results.append(str(DNN.validate(cx, cy, x, y)))
 
         for nn in gru:
             tf.compat.v1.reset_default_graph()
@@ -72,8 +72,8 @@ if __name__ == '__main__':
             initial_state = md.State(x=cx[0], y=cy[0], yaw=cyaw[0], v=0.0)
             x, y = DNN.predictWithoutValidate(model, cx, cy, cyaw, sp, initial_state, md.DT)
             results.append(nn)
-            results.append(str(DNN.validate(cx, cy, x, y)))
             results.append(str(time.time()-startTime)) 
+            results.append(str(DNN.validate(cx, cy, x, y)))
 
         f = open('data/validation/efficiency.txt', 'a')
         f.write(",".join(results)+'\n')
